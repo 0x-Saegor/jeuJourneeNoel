@@ -1,6 +1,7 @@
 # fais une feneêtre sous customtkinter
 from customtkinter import *
 import csv
+import socket
 
 tab = []
 #  open csv file
@@ -13,7 +14,7 @@ with open("questions.csv", newline='', encoding='utf-8-sig') as csvfile:
 
 app = CTk()
 app.title("Panneau de contrôle et d'administration")
-app.geometry("1000x600")
+app.geometry("1250x600")
 app.resizable(False, False)
 
 
@@ -300,10 +301,53 @@ def afficher_rep():
     # buttonQuestion.configure(state="normal")
     tab.pop(0)
 
+server = None
+HOST_ADDR = "127.0.0.1"
+HOST_PORT = 1234
+players = {}
+
+def launch_server():
+    global server
+    server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    server.bind((HOST_ADDR, HOST_PORT))
+    server.listen(5)
+    print("Server launched")
+    while len(players) < 5:
+        client, client_address = server.accept()
+        print(f"{client_address} connected")
+        players[client_address] = client
+        print(f"{client_address} is player {len(players)}")
+    return players
+        
+    
+def send_question(question):
+    for player in players:
+        players[player].send(question.encode())
+        print(f"Question sent to {player}")
+        
+def receive_answers():
+    answers = {}
+    for player in players:
+        answer = players[player].recv(1024).decode()
+        answers[player] = answer
+        print(f"Answer from {player} received")
+    return answers
+    
+# def send_good_answer(answer):
+        
+def stop_server():
+    global server
+    server.close()
+    print("Server stopped")
+    
+    
+
+
+
 ### Grid ###
 
 app.grid_columnconfigure(1, weight=1)
-app.grid_columnconfigure((2, 3), weight=0)
+# app.grid_columnconfigure(4, weight=0)
 app.grid_rowconfigure((0, 1, 2), weight=1)
 
 ## Frames ###
@@ -532,20 +576,68 @@ buttons_frame_2.pack(fill="both", expand=True)
 ### Buttons ###
 
 envoi_propositions = CTkButton(buttons_frame_2, text="Envoyer les propositions",
-                                 width=250)
+                                 width=250, hover=True)
 envoi_propositions.pack(pady=12)
 
 afficher_reponse = CTkButton(buttons_frame_2, text="Afficher la réponse",
-                             width=250)
+                             width=250, hover=True)
 afficher_reponse.pack(pady=12)
 
 afficher_score = CTkButton(buttons_frame_2, text="Afficher le score",
-                            width=250)
+                            width=250, hover=True)
 afficher_score.pack(pady=12)
 
+def test_button():
+    print("fonction appelée")
+    entry1.insert(0, "\n"+"Joueur 1 a joué A")
+    entry2.insert(0, "\nJoueur 1 a joué A")
+    entry3.insert(0, "\nJoueur 1 a joué A")
+    entry4.insert(0, "\nJoueur 1 a joué A")
+    entry5.insert(0, "\nJoueur 1 a joué A")
+    
 buttonQuestion = CTkButton(buttons_frame_2, text="Question suivante",
-                           width=250)
+                           width=250, hover=True)
 buttonQuestion.pack(pady=12)
+
+test_button = CTkButton(buttons_frame_2, text="Test",
+                            width=250, command=test_button, hover=True)
+test_button.pack(pady=50)
+
+
+
+###Third frame ###
+
+third_frame = CTkFrame(app, corner_radius=0)
+third_frame.grid(row=0, column=3, rowspan=4, sticky="nsew")
+
+text3 = CTkLabel(third_frame, text="Retour Clients",
+                font=CTkFont(size=20))
+
+text3.pack(pady=15)
+
+# Frame entry boxes
+
+entry_frame = CTkFrame(third_frame, corner_radius=0)
+entry_frame.pack(fill="both", expand=True,padx=20, pady=0)  
+
+### Entry boxes ###
+
+entry1 = CTkEntry(entry_frame, width=250, height=80)
+entry1.pack(pady=12)
+
+entry2 = CTkEntry(entry_frame, width=250, height=80)
+entry2.pack(pady=12)
+
+entry3 = CTkEntry(entry_frame, width=250, height=80)
+entry3.pack(pady=12)
+
+entry4 = CTkEntry(entry_frame, width=250, height=80)
+entry4.pack(pady=12)
+
+entry5 = CTkEntry(entry_frame, width=250, height=80)
+entry5.pack(pady=12)
+
+
 
 
 

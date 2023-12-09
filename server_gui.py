@@ -143,7 +143,7 @@ def send_receive_client_message(client_connection, client_ip_addr):
         joueurs[sending_client_name][0].config(state=tk.NORMAL)
         joueurs[sending_client_name].append(client_connection)
         joueurs[sending_client_name].append(client_msg)
-        joueurs[sending_client_name][0].insert(tk.END, "\n"+sending_client_name+ "a dit "+client_msg)
+        joueurs[sending_client_name][0].insert(tk.END, "\n"+sending_client_name+ " a dit "+client_msg)
         joueurs[sending_client_name][0].config(state=tk.DISABLED)
         print(joueurs)
         #for c in clients:

@@ -2,6 +2,7 @@
 from customtkinter import *
 import csv
 import socket
+import threading
 
 tab = []
 #  open csv file
@@ -301,30 +302,142 @@ def afficher_rep():
     # buttonQuestion.configure(state="normal")
     tab.pop(0)
 
+##########################################################################################
+
 server = None
 HOST_ADDR = "127.0.0.1"
 HOST_PORT = 1234
 players = {}
 
+clients = []
+clients_names = []
+
+
+def accept_clients(the_server, y):
+    while True:
+        client, addr = the_server.accept()
+        clients.append(client)
+
+        # use a thread so as not to clog the gui thread
+        threading._start_new_thread(
+            send_receive_client_message, (client, addr))
+
+
 def launch_server():
-    global server
+    global server, HOST_ADDR, HOST_PORT  # code is fine without this
+
     server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    print(socket.AF_INET)
+    print(socket.SOCK_STREAM)
+
     server.bind((HOST_ADDR, HOST_PORT))
-    server.listen(5)
-    print("Server launched")
-    while len(players) < 5:
-        client, client_address = server.accept()
-        print(f"{client_address} connected")
-        players[client_address] = client
-        print(f"{client_address} is player {len(players)}")
-    return players
+    server.listen(5)  # server is listening for client connection
+
+    threading._start_new_thread(accept_clients, (server, " "))
+
+
+def get_client_index(client_list, curr_client):
+    idx = 0
+    for conn in client_list:
+        if conn == curr_client:
+            break
+        idx = idx + 1
+
+    return idx
+
+
+def send_receive_client_message(client_connection, client_ip_addr):
+    global server, client_name, clients, clients_addr, joueurs
+    client_msg = " "
+
+    # send welcome message to client
+    client_name = client_connection.recv(4096).decode()
+    if client_name == "1":
+        entry1.delete(0, "end")
+        entry1.insert("end", "Joueur "+client_name + " connecté")
+    elif client_name == "2":
+        entry2.delete(0, "end")
+        entry2.insert("end", "Joueur "+client_name + " connecté")
+    elif client_name == "3":
+        entry3.delete(0, "end")
+        entry3.insert("end", "Joueur "+client_name + " connecté")
+    elif client_name == "4":
+        entry4.delete(0, "end")
+        entry4.insert("end", "Joueur "+client_name + " connecté")
+    elif client_name == "5":
+        entry5.delete(0, "end")
+        entry5.insert("end", "Joueur "+client_name + " connecté")
         
-    
+    welcome_msg = "Welcome " + client_name + ". Use 'exit' to quit"
+    client_connection.send(welcome_msg.encode())
+
+    clients_names.append(client_name)
+
+    update_client_names_display(clients_names)  # update client names display
+
+    while True:
+        data = client_connection.recv(4096).decode()
+        if not data:
+            break
+        if data == "exit":
+            break
+
+        client_msg = data
+
+        idx = get_client_index(clients, client_connection)
+        sending_client_name = clients_names[idx]
+        joueurs[sending_client_name].append(client_connection)
+        joueurs[sending_client_name].append(client_msg)
+        if sending_client_name == "1":
+            entry1.delete(0, "end")
+            entry1.insert("end", "Joueur "+sending_client_name + " a dit "+client_msg)
+        elif sending_client_name == "2":
+            entry2.delete(0, "end")
+            entry2.insert("end", "Joueur "+sending_client_name + " a dit "+client_msg)
+        elif sending_client_name == "3":
+            entry3.delete(0, "end")
+            entry3.insert("end", "Joueur "+sending_client_name + " a dit "+client_msg)
+        elif sending_client_name == "4":
+            entry4.delete(0, "end")
+            entry4.insert("end", "Joueur "+sending_client_name + " a dit "+client_msg)
+        elif sending_client_name == "5":
+            entry5.delete(0, "end")
+            entry5.insert("end", "Joueur "+sending_client_name + " a dit "+client_msg)
+        
+        print(joueurs)
+        # for c in clients:
+        #   if c != client_connection:
+        #       server_msg = str(client_msg)
+        #       c.send(server_msg.encode())
+
+    # find the client index then remove from both lists(client name list and connection list)
+    idx = get_client_index(clients, client_connection)
+    del clients_names[idx]
+    del clients[idx]
+    server_msg = "BYE!"
+    client_connection.send(server_msg.encode())
+    client_connection.close()
+
+    update_client_names_display(clients_names)  # update client names display
+
+joueurs={}
+
+def update_client_names_display(name_list):
+    global joueurs
+    affichage = [entry1, entry2]
+    for i in range(len(name_list)):
+        joueurs[name_list[i]] = []
+        joueurs[name_list[i]].append(affichage[i])
+    print(joueurs)
+
+
+
 def send_question(question):
     for player in players:
         players[player].send(question.encode())
         print(f"Question sent to {player}")
-        
+
+
 def receive_answers():
     answers = {}
     for player in players:
@@ -332,20 +445,76 @@ def receive_answers():
         answers[player] = answer
         print(f"Answer from {player} received")
     return answers
-    
+
 # def send_good_answer(answer):
-        
+
+
 def stop_server():
     global server
     server.close()
     print("Server stopped")
-    
-    
 
+##########################################################################################
 
+def emission1():
+    print("Emission 1 lancée")
+    global tab
+    print(tab[0])
+
+def send_props():
+    global tab
+    print(tab[0])
+    question = tab[0]["Question"]
+    reponse = tab[0]["Reponse"]
+    propA = tab[0]["A"]
+    propB = tab[0]["B"]
+    propC = tab[0]["C"]
+    propD = tab[0]["D"]
+    send_question(question)
+    answers = receive_answers()
+    print(answers)
+    # send_good_answer(reponse)
+    tab.pop(0)
+    print(tab[0])
+    # if len(tab) == 0:
+    #     buttonQuestion.configure(state="disabled")
+    #     buttonAnswer.configure(state="disabled")
+    #     start_game_btn.configure(state="normal")
+    #     question.configure(text="Fin de la partie")
+    #     prop_A.configure(text="")
+    #     prop_B.configure(text="")
+    #     prop_C.configure(text="")
+    #     prop_D.configure(text="")
+    #     answer.configure(text="")
+    #     entry1.delete(0, "end")
+    #     entry2.delete(0, "end")
+    #     entry3.delete(0, "end")
+    #     entry4.delete(0, "end")
+    #     entry5.delete(0, "end")
+    #     entry1.insert("end", "Joueur 1 déconnecté")
+    #     entry2.insert("end", "Joueur 2 déconnecté")
+    #     entry3.insert("end", "Joueur 3 déconnecté")
+    #     entry4.insert("end", "Joueur 4 déconnecté")
+    #     entry5.insert("end", "Joueur 5 déconnecté")
+    #     entry1.configure(state="disabled")
+    #     entry2.configure(state="disabled")
+    #     entry3.configure(state="disabled")
+    #     entry4.configure(state="disabled")
+    #     entry5.configure(state="disabled")
+    #     joueurs.clear()
+    #     clients.clear()
+    #     clients_names.clear()
+    #     players.clear()
+    #     print("Fin de la partie")
+    #     stop_server()
+    # else:
+    #     entry1.delete(0, "end")
+    #     entry2.delete(0, "end")
+    #     entry3.delete(0, "end")
+    #     entry4.delete(0, "end")
+    #     entry5.delete(
 
 ### Grid ###
-
 app.grid_columnconfigure(1, weight=1)
 # app.grid_columnconfigure(4, weight=0)
 app.grid_rowconfigure((0, 1, 2), weight=1)
@@ -539,23 +708,23 @@ buttonsFrame.pack(fill="both", expand=True, padx=20, pady=0)
 # buttons to create emission 1 to 5
 
 emission1 = CTkButton(buttonsFrame, text="Emission 1",
-                      width=250, command=next_question)
+                      width=250, command=emission1)
 emission1.pack(pady=12)
 
 emission2 = CTkButton(buttonsFrame, text="Emission 2",
-                      width=250, command=next_question)
+                      width=250, command=emission1)
 emission2.pack(pady=12)
 
 emission3 = CTkButton(buttonsFrame, text="Emission 3",
-                      width=250, command=next_question)
+                      width=250, command=emission1)
 emission3.pack(pady=12)
 
 emission4 = CTkButton(buttonsFrame, text="Emission 4",
-                      width=250, command=next_question)
+                      width=250, command=emission1)
 emission4.pack(pady=12)
 
 emission5 = CTkButton(buttonsFrame, text="Emission 5",
-                      width=250, command=next_question)
+                      width=250, command=emission1)
 emission5.pack(pady=12)
 
 
@@ -565,7 +734,7 @@ second_frame = CTkFrame(app, corner_radius=0)
 second_frame.grid(row=0, column=2, rowspan=4, sticky="nsew")
 
 text2 = CTkLabel(second_frame, text="Panneau de jeu",
-                font=CTkFont(size=20))
+                 font=CTkFont(size=20))
 text2.pack(pady=15)
 
 # Frame buttons
@@ -576,7 +745,7 @@ buttons_frame_2.pack(fill="both", expand=True)
 ### Buttons ###
 
 envoi_propositions = CTkButton(buttons_frame_2, text="Envoyer les propositions",
-                                 width=250, hover=True)
+                               width=250, hover=True, command=send_props)
 envoi_propositions.pack(pady=12)
 
 afficher_reponse = CTkButton(buttons_frame_2, text="Afficher la réponse",
@@ -584,61 +753,67 @@ afficher_reponse = CTkButton(buttons_frame_2, text="Afficher la réponse",
 afficher_reponse.pack(pady=12)
 
 afficher_score = CTkButton(buttons_frame_2, text="Afficher le score",
-                            width=250, hover=True)
+                           width=250, hover=True)
 afficher_score.pack(pady=12)
 
+x = 0
+
+
 def test_button():
-    print("fonction appelée")
-    entry1.insert(0, "\n"+"Joueur 1 a joué A")
-    entry2.insert(0, "\nJoueur 1 a joué A")
-    entry3.insert(0, "\nJoueur 1 a joué A")
-    entry4.insert(0, "\nJoueur 1 a joué A")
-    entry5.insert(0, "\nJoueur 1 a joué A")
-    
+    global x
+    x += 1
+    entry1.delete(0, "end")
+    entry2.delete(0, "end")
+    entry3.delete(0, "end")
+    entry4.delete(0, "end")
+    entry5.delete(0, "end")
+    entry1.insert(0, "test"+str(x))
+    entry2.insert(0, "test"+str(x))
+    entry3.insert(0, "test"+str(x))
+    entry4.insert(0, "test"+str(x))
+    entry5.insert(0, "test"+str(x))
+
+
 buttonQuestion = CTkButton(buttons_frame_2, text="Question suivante",
                            width=250, hover=True)
 buttonQuestion.pack(pady=12)
 
-test_button = CTkButton(buttons_frame_2, text="Test",
-                            width=250, command=test_button, hover=True)
-test_button.pack(pady=50)
+test_button = CTkButton(buttons_frame_2, text="Lancement serveur",
+                        width=250, command=launch_server, hover=True)
+test_button.pack(pady=25)
 
 
-
-###Third frame ###
+### Third frame ###
 
 third_frame = CTkFrame(app, corner_radius=0)
 third_frame.grid(row=0, column=3, rowspan=4, sticky="nsew")
 
 text3 = CTkLabel(third_frame, text="Retour Clients",
-                font=CTkFont(size=20))
+                 font=CTkFont(size=20))
 
 text3.pack(pady=15)
 
 # Frame entry boxes
 
 entry_frame = CTkFrame(third_frame, corner_radius=0)
-entry_frame.pack(fill="both", expand=True,padx=20, pady=0)  
+entry_frame.pack(fill="both", expand=True, padx=20, pady=0)
 
 ### Entry boxes ###
 
-entry1 = CTkEntry(entry_frame, width=250, height=80)
+entry1 = CTkEntry(entry_frame, width=250, height=85)
 entry1.pack(pady=12)
 
-entry2 = CTkEntry(entry_frame, width=250, height=80)
+entry2 = CTkEntry(entry_frame, width=250, height=85)
 entry2.pack(pady=12)
 
-entry3 = CTkEntry(entry_frame, width=250, height=80)
+entry3 = CTkEntry(entry_frame, width=250, height=85)
 entry3.pack(pady=12)
 
-entry4 = CTkEntry(entry_frame, width=250, height=80)
+entry4 = CTkEntry(entry_frame, width=250, height=85)
 entry4.pack(pady=12)
 
-entry5 = CTkEntry(entry_frame, width=250, height=80)
+entry5 = CTkEntry(entry_frame, width=250, height=85)
 entry5.pack(pady=12)
-
-
-
 
 
 ### Seconde fenêtre ###

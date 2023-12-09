@@ -49,7 +49,7 @@ def connect():
 # network client
 client = None
 HOST_ADDR = "127.0.0.1"
-HOST_PORT = 59000
+HOST_PORT = 1234
 
 def connect_to_server(name):
     global client, HOST_PORT, HOST_ADDR

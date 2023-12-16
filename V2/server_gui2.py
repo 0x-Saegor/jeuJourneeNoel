@@ -176,7 +176,7 @@ j5_5 = CTkButton(cadre_J5, text="+5", command=lambda: plus_cinq_j5(), state="dis
 j5_5.grid(row=0, column=3, padx=(5, 0))
 ###################################################################
 server = None
-HOST_ADDR = "192.168.1.62"
+HOST_ADDR = "127.0.0.1"
 HOST_PORT = 59000
 client_name = " "
 clients = []

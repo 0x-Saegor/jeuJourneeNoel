@@ -4,6 +4,7 @@ import threading
 import csv
 from customtkinter import *
 
+set_appearance_mode("dark")
 
 def extractionDonnees(nomFichier, separateur):
     '''
@@ -32,7 +33,7 @@ indice = 0
 
 def charger_emission(fichier):
     global questions
-    envoi.configure(state="normal")
+    envoi.configure()
     questions = extractionDonnees(fichier, ";")
     print(questions)
 
@@ -47,41 +48,41 @@ topFrame = CTkFrame(window)
 btnStart = CTkButton(topFrame, text="Connect", command=lambda: start_server())
 btnStart.grid(row=0, column=0, padx=5, pady=5)
 btnStop = CTkButton(topFrame, text="Stop",
-                    command=lambda: stop_server(), state="disabled")
+                    command=lambda: stop_server())
 btnStop.grid(row=0, column=1, padx=5, pady=5)
 
 # bouton suivant pour passer à la question suivante
-suivant = CTkButton(topFrame, text="Quest.Suivante", command=lambda: next(), state="disabled")
+suivant = CTkButton(topFrame, text="Quest.Suivante", command=lambda: next())
 suivant.grid(row=0, column=2, padx=5, pady=5)
 
 envoi_score = CTkButton(topFrame, text="affiche score",
-                        command=lambda: envoi_score_(), state="disabled")
+                        command=lambda: envoi_score_())
 envoi_score.grid(row=0, column=3, padx=5, pady=5)
 
 envoi_rep = CTkButton(topFrame, text="affiche réponse",
-                      command=lambda: envoi_reponse(), state="disabled")
+                      command=lambda: envoi_reponse())
 envoi_rep.grid(row=0, column=4, padx=5, pady=5)
 
 # boutons pour envoyer des infos aux clients (propositions ou score - il manque le bouton envoi_score)
-envoi = CTkButton(topFrame, text="Envoi", command=lambda: envoi_question(), state="disabled")
+envoi = CTkButton(topFrame, text="Envoi", command=lambda: envoi_question())
 envoi.grid(row=0, column=5, padx=5, pady=5)
 ###Ordre : connect stop quest suivante afficher score affich rep envoi emission 1
 
 # bouton pour charger les émissions (il en faut 5)
 charge_emission = CTkButton(
-    topFrame, text="Emission 1", command=lambda: charger_emission("questions.csv"), state="disabled")
+    topFrame, text="Emission 1", command=lambda: charger_emission("questions.csv"))
 charge_emission.grid(row=1, column=0, padx=5, pady=5)
 
-charge_emission2=CTkButton(topFrame, text="Emission 2", command=lambda : charger_emission("questions.csv"), state="disabled")
+charge_emission2=CTkButton(topFrame, text="Emission 2", command=lambda : charger_emission("questions.csv"))
 charge_emission2.grid(row=1, column=1, padx=5, pady=5)
 
-charge_emission3=CTkButton(topFrame, text="Emission 3", command=lambda : charger_emission("questions.csv"), state="disabled") 
+charge_emission3=CTkButton(topFrame, text="Emission 3", command=lambda : charger_emission("questions.csv")) 
 charge_emission3.grid(row=1, column=2, padx=5, pady=5)
 
-charge_emission4=CTkButton(topFrame, text="Emission 4", command=lambda : charger_emission("questions.csv"), state="disabled") 
+charge_emission4=CTkButton(topFrame, text="Emission 4", command=lambda : charger_emission("questions.csv")) 
 charge_emission4.grid(row=1, column=3, padx=5, pady=5)
 
-charge_emission5=CTkButton(topFrame, text="Emission 5", command=lambda : charger_emission("questions.csv"), state="disabled") 
+charge_emission5=CTkButton(topFrame, text="Emission 5", command=lambda : charger_emission("questions.csv")) 
 charge_emission5.grid(row=1, column=4, padx=5, pady=5)
 
 
@@ -102,15 +103,20 @@ joueur1_display.grid(row=0, column=0, padx=(5, 0))
 cadre_J1.grid(row=2, column=0, pady=(5, 5), sticky="nsew")
 
 # boutons score J1
-j1_1 = CTkButton(cadre_J1, text="+1", command=lambda: plus_un_j1(), state="disabled")
+j1_1 = CTkButton(cadre_J1, text="+1", command=lambda: plus_un_j1())
 j1_1.grid(row=0, column=1, padx=(5, 0))
 
-j1_3 = CTkButton(cadre_J1, text="+3", command=lambda: plus_trois_j1(), state="disabled")
+j1_3 = CTkButton(cadre_J1, text="+3", command=lambda: plus_trois_j1())
 j1_3.grid(row=0, column=2, padx=(5, 0))
 
-j1_5 = CTkButton(cadre_J1, text="+5", command=lambda: plus_cinq_j1(), state="disabled")
+j1_5 = CTkButton(cadre_J1, text="+5", command=lambda: plus_cinq_j1())
 j1_5.grid(row=0, column=3, padx=(5, 0))
 
+reset_score_j1 = CTkButton(cadre_J1, text="Reset score", command=lambda: reset_j1_def())
+reset_score_j1.grid(row=0, column=4, padx=(5, 0))
+
+eliminate_j1 = CTkButton(cadre_J1, text="Eliminate", command=lambda: eliminer_j1())
+eliminate_j1.grid(row=0, column=5, padx=(5, 0))
 # fenêtre J2
 cadre_J2 = CTkFrame(window)
 joueur2_display = CTkTextbox(cadre_J2, width=400, height=150)
@@ -118,15 +124,17 @@ joueur2_display.grid(row=0, column=0, padx=(5, 0))
 cadre_J2.grid(row=3, column=0, pady=(5, 5), sticky="nsew")
 
 # boutons score J2
-j2_1 = CTkButton(cadre_J2, text="+1", command=lambda: plus_un_j2(), state="disabled")
+j2_1 = CTkButton(cadre_J2, text="+1", command=lambda: plus_un_j2())
 j2_1.grid(row=0, column=1, padx=(5, 0))
 
-j2_3 = CTkButton(cadre_J2, text="+3", command=lambda: plus_trois_j2(), state="disabled")
+j2_3 = CTkButton(cadre_J2, text="+3", command=lambda: plus_trois_j2())
 j2_3.grid(row=0, column=2, padx=(5, 0))
 
-j2_5 = CTkButton(cadre_J2, text="+5", command=lambda: plus_cinq_j2(), state="disabled")
+j2_5 = CTkButton(cadre_J2, text="+5", command=lambda: plus_cinq_j2())
 j2_5.grid(row=0, column=3, padx=(5, 0))
 
+reset_score_j2 = CTkButton(cadre_J2, text="Reset score", command=lambda: reset_j2_def())
+reset_score_j2.grid(row=0, column=4, padx=(5, 0))
 # fenêtre J3
 cadre_J3 = CTkFrame(window)
 joueur3_display = CTkTextbox(cadre_J3, width=400, height=150)
@@ -134,15 +142,17 @@ joueur3_display.grid(row=0, column=0, padx=(5, 0))
 cadre_J3.grid(row=4, column=0, pady=(5, 5), sticky="nsew")
 
 # boutons score J3
-j3_1 = CTkButton(cadre_J3, text="+1", command=lambda: plus_un_j3(), state="disabled")
+j3_1 = CTkButton(cadre_J3, text="+1", command=lambda: plus_un_j3())
 j3_1.grid(row=0, column=1, padx=(5, 0))
 
-j3_3 = CTkButton(cadre_J3, text="+3", command=lambda: plus_trois_j3(), state="disabled")
+j3_3 = CTkButton(cadre_J3, text="+3", command=lambda: plus_trois_j3())
 j3_3.grid(row=0, column=2, padx=(5, 0))
 
-j3_5 = CTkButton(cadre_J3, text="+5", command=lambda: plus_cinq_j3(), state="disabled")
+j3_5 = CTkButton(cadre_J3, text="+5", command=lambda: plus_cinq_j3())
 j3_5.grid(row=0, column=3, padx=(5, 0))
 
+reset_score_j3 = CTkButton(cadre_J3, text="Reset score", command=lambda: reset_j3_def())
+reset_score_j3.grid(row=0, column=4, padx=(5, 0))
 # fenêtre J4
 cadre_J4 = CTkFrame(window)
 joueur4_display = CTkTextbox(cadre_J4, width=400, height=150)
@@ -150,15 +160,16 @@ joueur4_display.grid(row=0, column=0, padx=(5, 0))
 cadre_J4.grid(row=5, column=0, pady=(5, 5), sticky="nsew")
 
 # boutons score J4
-j4_1 = CTkButton(cadre_J4, text="+1", command=lambda: plus_un_j4(), state="disabled")
+j4_1 = CTkButton(cadre_J4, text="+1", command=lambda: plus_un_j4())
 j4_1.grid(row=0, column=1, padx=(5, 0))
 
-j4_3 = CTkButton(cadre_J4, text="+3", command=lambda: plus_trois_j4(), state="disabled")
+j4_3 = CTkButton(cadre_J4, text="+3", command=lambda: plus_trois_j4())
 j4_3.grid(row=0, column=2, padx=(5, 0))
 
-j4_5 = CTkButton(cadre_J4, text="+5", command=lambda: plus_cinq_j4(), state="disabled")
+j4_5 = CTkButton(cadre_J4, text="+5", command=lambda: plus_cinq_j4())
 j4_5.grid(row=0, column=3, padx=(5, 0))
-
+reset_score_j4 = CTkButton(cadre_J4, text="Reset score", command=lambda: reset_j4_def())
+reset_score_j4.grid(row=0, column=4, padx=(5, 0))
 # fenêtre J5
 cadre_J5 = CTkFrame(window)
 joueur5_display = CTkTextbox(cadre_J5, width=400, height=150)
@@ -166,14 +177,17 @@ joueur5_display.grid(row=0, column=0, padx=(5, 0))
 cadre_J5.grid(row=6, column=0, pady=(5, 5), sticky="nsew")
 
 # boutons score J5
-j5_1 = CTkButton(cadre_J5, text="+1", command=lambda: plus_un_j5(), state="disabled")
+j5_1 = CTkButton(cadre_J5, text="+1", command=lambda: plus_un_j5())
 j5_1.grid(row=0, column=1, padx=(5, 0))
 
-j5_3 = CTkButton(cadre_J5, text="+3", command=lambda: plus_trois_j5(), state="disabled")
+j5_3 = CTkButton(cadre_J5, text="+3", command=lambda: plus_trois_j5())
 j5_3.grid(row=0, column=2, padx=(5, 0))
 
-j5_5 = CTkButton(cadre_J5, text="+5", command=lambda: plus_cinq_j5(), state="disabled")
+j5_5 = CTkButton(cadre_J5, text="+5", command=lambda: plus_cinq_j5())
 j5_5.grid(row=0, column=3, padx=(5, 0))
+
+reset_score_j5 = CTkButton(cadre_J5, text="Reset score", command=lambda: reset_j5_def())
+reset_score_j5.grid(row=0, column=4, padx=(5, 0))
 ###################################################################
 server = None
 HOST_ADDR = "127.0.0.1"
@@ -188,11 +202,6 @@ def start_server():
     global server, HOST_ADDR, HOST_PORT  # code is fine without this
     btnStart.configure(state="disabled")
     btnStop.configure(state="normal")
-    charge_emission.configure(state="normal")
-    charge_emission2.configure(state="normal")
-    charge_emission3.configure(state="normal")
-    charge_emission4.configure(state="normal")
-    charge_emission5.configure(state="normal")
 
     server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     print(socket.AF_INET)
@@ -211,7 +220,7 @@ def start_server():
 # Stop server function
 def stop_server():
     global server
-    btnStart.configure(state="normal")
+    btnStart.configure()
     btnStop.configure(state="disabled")
 
 
@@ -254,7 +263,7 @@ def send_receive_client_message(client_connection, client_ip_addr):
 
         idx = get_client_index(clients, client_connection)
         sending_client_name = clients_names[idx]
-        joueurs[sending_client_name]['affichage'].configure(state="normal")
+        joueurs[sending_client_name]['affichage'].configure()
 
         joueurs[sending_client_name]['message'] = client_msg
         joueurs[sending_client_name]['affichage'].insert(
@@ -279,23 +288,7 @@ def send_receive_client_message(client_connection, client_ip_addr):
 
 def envoi_question():
     global questions, joueurs, indice
-    envoi.configure(state="disabled")
-    j1_1.configure(state="normal")
-    j1_3.configure(state="normal")
-    j1_5.configure(state="normal")
-    j2_1.configure(state="normal")
-    j2_3.configure(state="normal")
-    j2_5.configure(state="normal")
-    j3_1.configure(state="normal")  
-    j3_3.configure(state="normal")
-    j3_5.configure(state="normal")
-    j4_1.configure(state="normal")
-    j4_3.configure(state="normal")
-    j4_5.configure(state="normal")
-    j5_1.configure(state="normal")
-    j5_3.configure(state="normal")
-    j5_5.configure(state="normal")
-    envoi_rep.configure(state="normal")
+
     print(questions[indice]['A'], questions[indice]['B'])
     for joueur in joueurs:
         match questions[indice]["Type"]:
@@ -313,8 +306,7 @@ def envoi_question():
 
 def envoi_reponse():
     global clients, joueurs
-    envoi_rep.configure(state="disabled")
-    envoi_score.configure(state="normal")
+    envoi_score.configure()
     for joueur in joueurs:
         print(type(joueurs[joueur]['message']))
         reponse_joueur = joueurs[joueur]['message']
@@ -323,23 +315,7 @@ def envoi_reponse():
 
 def envoi_score_():
     global clients, joueurs
-    j1_1.configure(state="disabled")
-    j1_3.configure(state="disabled")
-    j1_5.configure(state="disabled")
-    j2_1.configure(state="disabled")
-    j2_3.configure(state="disabled")
-    j2_5.configure(state="disabled")
-    j3_1.configure(state="disabled")
-    j3_3.configure(state="disabled")
-    j3_5.configure(state="disabled")
-    j4_1.configure(state="disabled")
-    j4_3.configure(state="disabled")
-    j4_5.configure(state="disabled")
-    j5_1.configure(state="disabled")
-    j5_3.configure(state="disabled")
-    j5_5.configure(state="disabled")
-    envoi_score.configure(state="disabled")
-    suivant.configure(state="normal")
+    suivant.configure()
     for joueur in joueurs:
         print(type(joueurs[joueur]['score']))
         score_joueur = joueurs[joueur]['score']
@@ -348,8 +324,6 @@ def envoi_score_():
 
 def next():
     global indice
-    suivant.configure(state="disabled")
-    envoi.configure(state="normal")
     indice += 1
     return indice
 
@@ -452,8 +426,96 @@ def plus_cinq_j5():
     joueurs[clients_names[4]]['score'] += 5
     print(joueurs)
 
-# Return the index of the current client in the list of clients
+# Reset score
 
+def reset_j1_def():
+    global joueurs, clients_names
+    joueurs[clients_names[0]]['score'] = 0
+    print(joueurs)
+
+def reset_j2_def():
+    global joueurs, clients_names
+    joueurs[clients_names[1]]['score'] = 0
+    print(joueurs)
+    
+def reset_j3_def():
+    global joueurs, clients_names
+    joueurs[clients_names[2]]['score'] = 0
+    print(joueurs)
+    
+def reset_j4_def():
+    global joueurs, clients_names
+    joueurs[clients_names[3]]['score'] = 0
+    print(joueurs)
+    
+def reset_j5_def():
+    global joueurs, clients_names
+    joueurs[clients_names[4]]['score'] = 0
+    print(joueurs)
+
+# eliminate players
+
+def envoi_reponse():
+    global clients, joueurs
+    envoi_score.configure()
+    for joueur in joueurs:
+        print(type(joueurs[joueur]['message']))
+        reponse_joueur = joueurs[joueur]['message']
+        joueurs[joueur]['socket'].send(("reponse;"+reponse_joueur).encode())
+
+
+def eliminer_j1():
+    global joueurs, clients_names
+    joueurs[clients_names[0]]['score'] = 0
+    j1_1.configure(state="disabled")
+    j1_3.configure(state="disabled")
+    j1_5.configure(state="disabled")
+    joueurs[clients_names[0]]["socket"].send(("eliminate;").encode())
+    reset_score_j1.configure(state="disabled")
+    
+    print(joueurs)
+    
+def eliminer_j2():
+    global joueurs, clients_names
+    joueurs[clients_names[1]]['score'] = 0
+    j2_1.configure(state="disabled")
+    j2_3.configure(state="disabled")
+    j2_5.configure(state="disabled")
+    joueurs[clients_names[1]]["socket"].send(("eliminate;").encode())
+    reset_score_j2.configure(state="disabled")
+    print(joueurs)
+
+def eliminer_j3():
+    global joueurs, clients_names
+    joueurs[clients_names[2]]['score'] = 0
+    j3_1.configure(state="disabled")
+    j3_3.configure(state="disabled")
+    j3_5.configure(state="disabled")
+    joueurs[clients_names[2]]["socket"].send(("eliminate;").encode())
+    reset_score_j3.configure(state="disabled")
+    print(joueurs)
+
+def eliminer_j4():
+    global joueurs, clients_names
+    joueurs[clients_names[3]]['score'] = 0
+    j4_1.configure(state="disabled")
+    j4_3.configure(state="disabled")
+    j4_5.configure(state="disabled")
+    joueurs[clients_names[3]]["socket"].send(("eliminate;").encode())
+    reset_score_j4.configure(state="disabled")
+    print(joueurs)
+    
+def eliminer_j5():
+    global joueurs, clients_names
+    joueurs[clients_names[4]]['score'] = 0
+    j5_1.configure(state="disabled")
+    j5_3.configure(state="disabled")
+    j5_5.configure(state="disabled")
+    joueurs[clients_names[4]]["socket"].send(("eliminate;").encode())
+    reset_score_j5.configure(state="disabled")
+    print(joueurs)
+
+# Return the index of the current client in the list of clients
 
 def get_client_index(client_list, curr_client):
     idx = 0

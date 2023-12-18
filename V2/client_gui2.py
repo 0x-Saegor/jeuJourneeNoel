@@ -177,10 +177,14 @@ def receive_message_from_server(sck, m):
                
                affiche_rep.insert("end", tab[1])
                affiche_rep.configure(state="normal")
+               
+        elif tab[0]=='eliminate':
+            window.destroy()
         #tkDisplay.configure(state="disabled")
         #tkDisplay.see("end")
 
-       #print("Server says: " +from_server)
+    print("Server says: " +from_server)
+    print(tab)
 
     sck.close()
     window.destroy()

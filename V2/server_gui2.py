@@ -135,6 +135,10 @@ j2_5.grid(row=0, column=3, padx=(5, 0))
 
 reset_score_j2 = CTkButton(cadre_J2, text="Reset score", command=lambda: reset_j2_def())
 reset_score_j2.grid(row=0, column=4, padx=(5, 0))
+
+eliminate_j2 = CTkButton(cadre_J2, text="Eliminate", command=lambda: eliminer_j2())
+eliminate_j2.grid(row=0, column=5, padx=(5, 0))
+
 # fenêtre J3
 cadre_J3 = CTkFrame(window)
 joueur3_display = CTkTextbox(cadre_J3, width=400, height=150)
@@ -153,6 +157,10 @@ j3_5.grid(row=0, column=3, padx=(5, 0))
 
 reset_score_j3 = CTkButton(cadre_J3, text="Reset score", command=lambda: reset_j3_def())
 reset_score_j3.grid(row=0, column=4, padx=(5, 0))
+
+eliminate_j3 = CTkButton(cadre_J3, text="Eliminate", command=lambda: eliminer_j3())
+eliminate_j3.grid(row=0, column=5, padx=(5, 0))
+
 # fenêtre J4
 cadre_J4 = CTkFrame(window)
 joueur4_display = CTkTextbox(cadre_J4, width=400, height=150)
@@ -170,6 +178,10 @@ j4_5 = CTkButton(cadre_J4, text="+5", command=lambda: plus_cinq_j4())
 j4_5.grid(row=0, column=3, padx=(5, 0))
 reset_score_j4 = CTkButton(cadre_J4, text="Reset score", command=lambda: reset_j4_def())
 reset_score_j4.grid(row=0, column=4, padx=(5, 0))
+
+eliminate_j4 = CTkButton(cadre_J4, text="Eliminate", command=lambda: eliminer_j4())
+eliminate_j4.grid(row=0, column=5, padx=(5, 0))
+
 # fenêtre J5
 cadre_J5 = CTkFrame(window)
 joueur5_display = CTkTextbox(cadre_J5, width=400, height=150)
@@ -188,6 +200,10 @@ j5_5.grid(row=0, column=3, padx=(5, 0))
 
 reset_score_j5 = CTkButton(cadre_J5, text="Reset score", command=lambda: reset_j5_def())
 reset_score_j5.grid(row=0, column=4, padx=(5, 0))
+
+eliminate_j5 = CTkButton(cadre_J5, text="Eliminate", command=lambda: eliminer_j5())
+eliminate_j5.grid(row=0, column=5, padx=(5, 0))
+
 ###################################################################
 server = None
 HOST_ADDR = "127.0.0.1"

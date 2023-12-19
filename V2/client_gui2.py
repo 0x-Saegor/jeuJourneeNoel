@@ -7,12 +7,25 @@ from customtkinter import *
 #Fenetre côté joueur
 window = CTk()
 window.geometry("500x200")
+window.resizable(width=False, height=False)
 window.title("Client - Joueur")
 username = " "
 
+def testc():
+    text = "Esse eu laborum sint labore eiusmod Lorem ad sint qui velit deserunt."
+    text2 = text.split(" ")
+    if len(text2) > 12:
+        text2.insert(12, "\n")
+    elif len(text2) > 6:
+        text2.insert(6, "\n")
+    final = " ".join(text2)
+    print(final)
+    rep_score.configure(text=final)
+      
+      
 #Fenêtre côté spectateur
 window2 = CTkToplevel()
-
+window2.geometry("1920x1080")
 
 topFrame = CTkFrame(window)
 lblName = CTkLabel(topFrame, text = "Name:", font=CTkFont(size=20)).pack(side="left", padx=(5, 0))
@@ -20,6 +33,7 @@ entName = CTkEntry(topFrame)
 entName.pack(side="left", padx=(5, 0))
 btnConnect = CTkButton(topFrame, text="Connect", command=lambda : connect())
 btnConnect.pack(side="left", padx=(5, 0))
+
 #btnConnect.bind('<Button-1>', connect)
 topFrame.pack(side="top", fill="x", expand=True)
 
@@ -36,13 +50,15 @@ reponseD = CTkButton(displayFrame, text="D", command=lambda : answer_D())
 displayFrame.pack(side="top", fill="x", expand=True)
 
 
-affichage=CTkFrame(window2)
+affichage=CTkFrame(window2, width=1920, height=1080)
 
-nom_joueur = CTkLabel(affichage, text ="")
-nom_joueur.pack(side="top")
+nom_joueur = CTkLabel(affichage, text ="", font=CTkFont(size=50))
+nom_joueur.pack(side="top", pady=5, padx=5)
 
-affiche_rep=CTkTextbox(affichage)
-affiche_rep.pack(side="top", fill="y", padx=(5, 0))
+rep_score = CTkLabel(affichage, text ="", font=CTkFont(size=75), width=1920, height=1080)
+rep_score.pack(side="top", pady=5, padx=5)
+
+
 affichage.pack(side="top")
 
 
@@ -137,7 +153,7 @@ def receive_message_from_server(sck, m):
     global client
     while True:
         from_server = sck.recv(4096).decode()
-        affiche_rep.delete('1.0', 'end')
+        rep_score.configure(text="")
         tab=from_server.split(";")
         print(tab)
         if not from_server: break
@@ -171,12 +187,11 @@ def receive_message_from_server(sck, m):
                         print("question cash")
         elif tab[0]=='reponse':
               
-               affiche_rep.insert("end", tab[1])
-               affiche_rep.configure(state="normal")
+               rep_score.configure(text=tab[1], font=CTkFont(size=100))
+               
         elif tab[0]=='score':
                
-               affiche_rep.insert("end", tab[1])
-               affiche_rep.configure(state="normal")
+               rep_score.configure(text=tab[1], font=CTkFont(size=150))
                
         elif tab[0]=='eliminate':
             window.destroy()

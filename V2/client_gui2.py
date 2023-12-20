@@ -3,6 +3,7 @@ from tkinter import messagebox
 import socket
 import threading
 from customtkinter import *
+set_appearance_mode("dark")
               
 #Fenetre côté joueur
 window = CTk()
@@ -52,10 +53,10 @@ displayFrame.pack(side="top", fill="x", expand=True)
 
 affichage=CTkFrame(window2, width=1920, height=1080)
 
-nom_joueur = CTkLabel(affichage, text ="", font=CTkFont(size=50))
+nom_joueur = CTkLabel(affichage, text ="", font=CTkFont(size=150))
 nom_joueur.pack(side="top", pady=5, padx=5)
 
-rep_score = CTkLabel(affichage, text ="", font=CTkFont(size=75), width=1920, height=1080)
+rep_score = CTkLabel(affichage, text ="", font=CTkFont(size=200), width=1920, height=1080)
 rep_score.pack(side="top", pady=5, padx=5)
 
 
@@ -128,7 +129,7 @@ def connect():
 
 # network client
 client = None
-HOST_ADDR = "127.0.0.1"
+HOST_ADDR = "172.20.44.84"
 HOST_PORT = 59000
 
 def connect_to_server(name):
@@ -187,11 +188,11 @@ def receive_message_from_server(sck, m):
                         print("question cash")
         elif tab[0]=='reponse':
               
-               rep_score.configure(text=tab[1], font=CTkFont(size=100))
+               rep_score.configure(text=tab[1], font=CTkFont(size=150))
                
         elif tab[0]=='score':
                
-               rep_score.configure(text=tab[1], font=CTkFont(size=150))
+               rep_score.configure(text=tab[1], font=CTkFont(size=400))
                
         elif tab[0]=='eliminate':
             window.destroy()

@@ -70,20 +70,24 @@ envoi.grid(row=0, column=5, padx=5, pady=5)
 
 # bouton pour charger les émissions (il en faut 5)
 charge_emission = CTkButton(
-    topFrame, text="Emission 1", command=lambda: charger_emission("questions.csv"))
+    topFrame, text="Emission 1", command=lambda: charger_emission("emission1.csv"))
 charge_emission.grid(row=1, column=0, padx=5, pady=5)
 
-charge_emission2=CTkButton(topFrame, text="Emission 2", command=lambda : charger_emission("questions.csv"))
+charge_emission2=CTkButton(topFrame, text="Emission 2", command=lambda : charger_emission("emission2.csv"))
 charge_emission2.grid(row=1, column=1, padx=5, pady=5)
 
-charge_emission3=CTkButton(topFrame, text="Emission 3", command=lambda : charger_emission("questions.csv")) 
+charge_emission3=CTkButton(topFrame, text="Emission 3", command=lambda : charger_emission("emission3.csv")) 
 charge_emission3.grid(row=1, column=2, padx=5, pady=5)
 
-charge_emission4=CTkButton(topFrame, text="Emission 4", command=lambda : charger_emission("questions.csv")) 
+charge_emission4=CTkButton(topFrame, text="Emission 4", command=lambda : charger_emission("emission4.csv")) 
 charge_emission4.grid(row=1, column=3, padx=5, pady=5)
 
-charge_emission5=CTkButton(topFrame, text="Emission 5", command=lambda : charger_emission("questions.csv")) 
+charge_emission5=CTkButton(topFrame, text="Emission 5", command=lambda : charger_emission("emission5.csv")) 
 charge_emission5.grid(row=1, column=4, padx=5, pady=5)
+
+timeOut = CTkButton(topFrame, text="TimeOut", command=lambda: envoi_timeout())
+timeOut.grid(row=1, column=5, padx=5, pady=5)
+
 
 
 topFrame.grid(row=0, column=0, pady=(5, 0), sticky="nsew")
@@ -206,7 +210,8 @@ eliminate_j5.grid(row=0, column=5, padx=(5, 0))
 
 ###################################################################
 server = None
-HOST_ADDR = "172.20.44.84"
+#HOST_ADDR = "172.20.44.84"
+HOST_ADDR = "127.0.0.1"
 HOST_PORT = 59000
 client_name = " "
 clients = []
@@ -541,19 +546,24 @@ def get_client_index(client_list, curr_client):
 
     return idx
 
+def envoi_timeout():
+    global joueurs
+    for joueur in joueurs:
+        joueurs[joueur]['socket'].send(("timeout;").encode())
 
 # Update client name display when a new client connects OR
 # When a connected client disconnects
-
+indexxx = 0
 def update_client_names_display(name_list):
-    global joueurs
+    global joueurs, indexxx
     affichage = [joueur1_display, joueur2_display,
                  joueur3_display, joueur4_display, joueur5_display]
     for i in range(len(name_list)):
-
         joueurs[name_list[i]]['affichage'] = affichage[i]
         joueurs[name_list[i]]['score'] = 0
-        joueurs[name_list[i]]['affichage'].insert("end", name_list[i] + " est connecté")
+    
+    joueurs[name_list[indexxx]]['affichage'].insert("end", name_list[indexxx] + " est connecté")
+    indexxx+=1
     print(joueurs)
 
 

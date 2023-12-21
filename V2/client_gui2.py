@@ -3,12 +3,14 @@ from tkinter import messagebox
 import socket
 import threading
 from customtkinter import *
-set_appearance_mode("dark")
               
+              
+             
+set_appearance_mode("dark")
 #Fenetre côté joueur
 window = CTk()
-window.geometry("500x200")
-window.resizable(width=False, height=False)
+window.geometry("700x200")
+
 window.title("Client - Joueur")
 username = " "
 
@@ -53,10 +55,10 @@ displayFrame.pack(side="top", fill="x", expand=True)
 
 affichage=CTkFrame(window2, width=1920, height=1080)
 
-nom_joueur = CTkLabel(affichage, text ="", font=CTkFont(size=150))
+nom_joueur = CTkLabel(affichage, text ="", font=CTkFont(size=50))
 nom_joueur.pack(side="top", pady=5, padx=5)
 
-rep_score = CTkLabel(affichage, text ="", font=CTkFont(size=200), width=1920, height=1080)
+rep_score = CTkLabel(affichage, text ="", font=CTkFont(size=75), width=1920, height=1080)
 rep_score.pack(side="top", pady=5, padx=5)
 
 
@@ -75,11 +77,11 @@ tkDisplay.configure(yscrollcommand=scrollBar.set, background="#F4F6F7", highligh
 displayFrame.pack(side="top")
 '''
 bottomFrame = CTkFrame(window)
-tkMessage = CTkTextbox(bottomFrame, height=2, width=55)
+tkMessage = CTkTextbox(bottomFrame, height=5, width=300)
 
 tkMessage.configure(state="disabled")
 tkMessage.bind("<Return>", (lambda event: getChatMessage(tkMessage.get("1.0", "end"))))
-bottomFrame.pack(side="bottom", fill="x", expand=True)
+bottomFrame.pack(side="top", fill="x", expand=True)
 
 def answer_A():
       global client
@@ -129,7 +131,7 @@ def connect():
 
 # network client
 client = None
-HOST_ADDR = "172.20.44.84"
+HOST_ADDR = "127.0.0.1"
 HOST_PORT = 59000
 
 def connect_to_server(name):
@@ -187,17 +189,34 @@ def receive_message_from_server(sck, m):
                         tkMessage.pack(side="left", padx=(5, 13), pady=(5, 10))
                         print("question cash")
         elif tab[0]=='reponse':
-              
-               rep_score.configure(text=tab[1], font=CTkFont(size=150))
+                text = tab[1]
+                text2 = text.split(" ")
+                if len(text2) > 12:
+                    text2.insert(12, "\n")
+                elif len(text2) > 6:
+                    text2.insert(6, "\n")
+                final = " ".join(text2)
+                print(final)
+                rep_score.configure(text=final,font=CTkFont(size=100))
+
                
         elif tab[0]=='score':
                
-               rep_score.configure(text=tab[1], font=CTkFont(size=400))
+               rep_score.configure(text=tab[1], font=CTkFont(size=150))
                
         elif tab[0]=='eliminate':
             window.destroy()
         #tkDisplay.configure(state="disabled")
         #tkDisplay.see("end")
+        
+        elif tab[0]=='timeout':
+            reponseA.pack_forget()
+            reponseB.pack_forget()
+            reponseC.pack_forget()
+            reponseD.pack_forget()
+            tkMessage.pack_forget()
+            rep_score.configure(text="Temps écoulé", font=CTkFont(size=150))
+            send_mssage_to_server("timeout")
 
     print("Server says: " +from_server)
     print(tab)

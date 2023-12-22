@@ -5,3 +5,5 @@ Ce jeu en réseau fonctionne en local, le serveur reçoit les connections des cl
 Crédits à Enzo et M. Klosowski pour la création du jeu.
 Lien du live contenant les jeux sur l'appli : https://www.youtube.com/live/kOh36PMYHaI?si=zZI4mOm6hxziZBsS
 
+<img width="853" alt="image" src="https://github.com/0x-Saeg0r/jeuJourneeNoel/assets/95881999/653b41b5-44f0-4d8c-8402-5538a2fa2c1a">
+Image du jeu

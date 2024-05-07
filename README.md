@@ -1,4 +1,4 @@
-# Jeu créer pour la journée du pull de Noël 2023 du lycée Saint François Notre Dame
+# Jeu créé pour la journée du pull de Noël 2023 du lycée Saint François Notre Dame
 
 Ce jeu en réseau fonctionne en local, le serveur reçoit les connections des clients et les gère. Il envoie les questions et gère les points. Le jeu a été joué ce 22 décembre à l'occasion de la journée du pull de Noël, une journée dédiée à la récolte de boîtes de conserves pour l'épicerie solidaire de Lesneven.
 
